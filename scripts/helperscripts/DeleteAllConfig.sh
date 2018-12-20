@@ -33,10 +33,10 @@ sudo rm /home/pi/RPi-Jukebox-RFID/settings/Idle_Time_Before_Shutdown
 sudo rm /home/pi/RPi-Jukebox-RFID/settings/Second_Swipe
 sudo rm /home/pi/RPi-Jukebox-RFID/settings/Playlists_Folders_Path
 sudo rm /home/pi/RPi-Jukebox-RFID/settings/ShowCover
-sudo rm /home/pi/RPi-Jukebox-RFID/scripts/gpio-buttons.py
 sudo rm /etc/systemd/system/phoniebox-rfid-reader.service 
 sudo rm /etc/systemd/system/phoniebox-startup-sound.service
 sudo rm /etc/systemd/system/phoniebox-gpio-buttons.service
+sudo rm /etc/systemd/system/phoniebox-advanced-rotary-control.service
 sudo rm /etc/systemd/system/phoniebox-idle-watchdog.service
 sudo rm /etc/systemd/system/rfid-reader.service 
 sudo rm /etc/systemd/system/startup-sound.service

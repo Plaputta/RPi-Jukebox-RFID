@@ -15,7 +15,6 @@ settings/rfid_trigger_play.conf
 settings/Second_Swipe
 settings/version
 htdocs/config.php
-scripts/gpio-buttons.py
 
 shared/*
 playlists/*

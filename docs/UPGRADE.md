@@ -68,21 +68,17 @@ echo "### Done with erasing old daemons. Stop ignoring errors!"
 # 2. install new ones - this is version > 1.1.8-beta
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-rfid-reader.service.stretch-default.sample /etc/systemd/system/phoniebox-rfid-reader.service 
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-startup-sound.service.stretch-default.sample /etc/systemd/system/phoniebox-startup-sound.service
-sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-gpio-buttons.service.stretch-default.sample /etc/systemd/system/phoniebox-gpio-buttons.service
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-idle-watchdog.service.sample /etc/systemd/system/phoniebox-idle-watchdog.service
 sudo chown root:root /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chown root:root /etc/systemd/system/phoniebox-startup-sound.service
-sudo chown root:root /etc/systemd/system/phoniebox-gpio-buttons.service
 sudo chown root:root /etc/systemd/system/phoniebox-idle-watchdog.service
 sudo chmod 644 /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chmod 644 /etc/systemd/system/phoniebox-startup-sound.service
-sudo chmod 644 /etc/systemd/system/phoniebox-gpio-buttons.service
 sudo chmod 644 /etc/systemd/system/phoniebox-idle-watchdog.service
 # enable the services needed
 sudo systemctl enable phoniebox-idle-watchdog
 sudo systemctl enable phoniebox-rfid-reader
 sudo systemctl enable phoniebox-startup-sound
-sudo systemctl enable phoniebox-gpio-buttons
 
 echo "classic" > /home/pi/RPi-Jukebox-RFID/settings/edition
 EDITION=$(grep 'SPOTinstall' /home/pi/PhonieboxInstall.conf|sed 's/SPOTinstall="//g'|sed 's/"//g'); if [ $EDITION == "YES" ]; then echo "plusSpotify"; else echo "classic"; fi > /home/pi/RPi-Jukebox-RFID/settings/edition
@@ -239,13 +235,10 @@ sudo chmod -R 775 /home/pi/RPi-Jukebox-RFID/htdocs
 # services to launch after boot using systmed
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-rfid-reader.service.stretch-default.sample /etc/systemd/system/phoniebox-rfid-reader.service 
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-startup-sound.service.stretch-default.sample /etc/systemd/system/phoniebox-startup-sound.service
-sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-gpio-buttons.service.stretch-default.sample /etc/systemd/system/phoniebox-gpio-buttons.service
 sudo chown root:root /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chown root:root /etc/systemd/system/phoniebox-startup-sound.service
-sudo chown root:root /etc/systemd/system/phoniebox-gpio-buttons.service
 sudo chmod 644 /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chmod 644 /etc/systemd/system/phoniebox-startup-sound.service
-sudo chmod 644 /etc/systemd/system/phoniebox-gpio-buttons.service
 # In case the older version of Phoniebox still uses crontab to start daemon script, UNDO the crontab changes
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/crontab-pi.UNDO-default.sample /var/spool/cron/crontabs/pi
 sudo chown pi:crontab /var/spool/cron/crontabs/pi

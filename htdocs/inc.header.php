@@ -497,8 +497,8 @@ if(isset($urlparams['rfidstatus']) && $urlparams['rfidstatus'] == "turnoff") {
 }
 
 // start the gpio button service
-if(isset($urlparams['gpiostatus']) && $urlparams['gpiostatus'] == "turnon") {
-    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-gpio-buttons.service";
+if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotarycontrolstatus'] == "turnon") {
+    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-advanced-rotary-control.service";
     if($debug == "true") { 
         print "Command: ".$exec; 
     } else { 
@@ -510,8 +510,8 @@ if(isset($urlparams['gpiostatus']) && $urlparams['gpiostatus'] == "turnon") {
 }
 
 // stop the gpio button service
-if(isset($urlparams['gpiostatus']) && $urlparams['gpiostatus'] == "turnoff") {
-    $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-gpio-buttons.service";
+if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotarycontrolstatus'] == "turnoff") {
+    $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-advanced-rotary-control.service";
     if($debug == "true") { 
         print "Command: ".$exec; 
     } else { 
