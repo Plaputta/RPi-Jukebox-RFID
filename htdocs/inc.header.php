@@ -187,6 +187,14 @@ if(isset($_GET['gpiostatus']) && trim($_GET['gpiostatus']) == "turnoff") {
     $urlparams['gpiostatus'] = trim($_GET['gpiostatus']);
 }
 
+if(isset($_GET['cardpresencesensorstatus']) && trim($_GET['cardpresencesensorstatus']) == "turnon") {
+    $urlparams['cardpresencesensorstatus'] = trim($_GET['cardpresencesensorstatus']);
+}
+
+if(isset($_GET['cardpresencesensorstatus']) && trim($_GET['cardpresencesensorstatus']) == "turnoff") {
+    $urlparams['cardpresencesensorstatus'] = trim($_GET['cardpresencesensorstatus']);
+}
+
 if(isset($_GET['enableresume']) && trim($_GET['enableresume']) != "") {
     $urlparams['enableresume'] = trim($_GET['enableresume']);
 }
@@ -519,6 +527,32 @@ if(isset($urlparams['gpiostatus']) && $urlparams['gpiostatus'] == "turnoff") {
         /* redirect to drop all the url parameters */
         header("Location: ".$conf['url_abs']);
         exit; 
+    }
+}
+
+// start the card presence sensor service
+if(isset($urlparams['cardpresencesensorstatus']) && $urlparams['cardpresencesensorstatus'] == "turnon") {
+    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-card-presence-sensor.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
+    }
+}
+
+// stop the card presence sensor service
+if(isset($urlparams['cardpresencesensorstatus']) && $urlparams['cardpresencesensorstatus'] == "turnoff") {
+    $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-card-presence-sensor.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
     }
 }
 
