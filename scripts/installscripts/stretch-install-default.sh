@@ -483,11 +483,9 @@ sudo systemctl disable idle-watchdog
 sudo systemctl disable rfid-reader
 sudo systemctl disable startup-sound
 sudo systemctl disable gpio-buttons
-sudo systemctl disable card-presence-sensor
 sudo rm /etc/systemd/system/rfid-reader.service
 sudo rm /etc/systemd/system/startup-sound.service
 sudo rm /etc/systemd/system/gpio-buttons.service
-sudo rm /etc/systemd/system/card-presence-sensor.service
 sudo rm /etc/systemd/system/idle-watchdog.service
 echo "### Done with erasing old daemons. Stop ignoring errors!" 
 # 2. install new ones - this is version > 1.1.8-beta

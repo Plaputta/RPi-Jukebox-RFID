@@ -39,6 +39,7 @@ echo "*** /etc/systemd/system/phoniebox*"
 ls -lh /etc/systemd/system/phoniebox-rfid-reader.service
 ls -lh /etc/systemd/system/phoniebox-startup-sound.service
 ls -lh /etc/systemd/system/phoniebox-gpio-buttons.service
+ls -lh /etc/systemd/system/phoniebox-card-presence-sensor.service
 ls -lh /etc/systemd/system/phoniebox-idle-watchdog.service
 
 echo "*** /etc/mpd.conf"
