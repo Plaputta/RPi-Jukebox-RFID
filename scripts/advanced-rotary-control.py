@@ -57,7 +57,7 @@ trigger.when_held = trigger_held
 
 direction = InputDevice(6, pull_up=True)
 
-encoder = Button(5,pull_up=True,bounce_time=0.05)
+encoder = Button(5,pull_up=True,bounce_time=0.01)
 encoder.when_released = check_rotation
 
 pause()

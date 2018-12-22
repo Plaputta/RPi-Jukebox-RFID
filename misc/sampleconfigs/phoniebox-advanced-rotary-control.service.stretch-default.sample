@@ -5,7 +5,7 @@ After=network.target iptables.service firewalld.service
 [Service]
 Restart=always
 WorkingDirectory=/home/pi/RPi-Jukebox-RFID
-ExecStart=/usr/bin/python2 /home/pi/RPi-Jukebox-RFID/scripts/advanced-rotary-control.py
+ExecStart=/usr/bin/python3 /home/pi/RPi-Jukebox-RFID/scripts/advanced-rotary-control.py
 User=pi
 Group=pi
 

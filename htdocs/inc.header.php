@@ -179,12 +179,12 @@ if(isset($_GET['rfidstatus']) && trim($_GET['rfidstatus']) == "turnoff") {
     $urlparams['rfidstatus'] = trim($_GET['rfidstatus']);
 }
 
-if(isset($_GET['gpiostatus']) && trim($_GET['gpiostatus']) == "turnon") {
-    $urlparams['gpiostatus'] = trim($_GET['gpiostatus']);
+if(isset($_GET['advancedrotarycontrolstatus']) && trim($_GET['advancedrotarycontrolstatus']) == "turnon") {
+    $urlparams['advancedrotarycontrolstatus'] = trim($_GET['advancedrotarycontrolstatus']);
 }
 
-if(isset($_GET['gpiostatus']) && trim($_GET['gpiostatus']) == "turnoff") {
-    $urlparams['gpiostatus'] = trim($_GET['gpiostatus']);
+if(isset($_GET['advancedrotarycontrolstatus']) && trim($_GET['advancedrotarycontrolstatus']) == "turnoff") {
+    $urlparams['advancedrotarycontrolstatus'] = trim($_GET['advancedrotarycontrolstatus']);
 }
 
 if(isset($_GET['enableresume']) && trim($_GET['enableresume']) != "") {
@@ -275,14 +275,6 @@ if(isset($_POST['rfidstatus']) && trim($_POST['rfidstatus']) == "turnon") {
 
 if(isset($_POST['rfidstatus']) && trim($_POST['rfidstatus']) == "turnoff") {
     $urlparams['rfidstatus'] = trim($_POST['rfidstatus']);
-}
-
-if(isset($_POST['gpiostatus']) && trim($_POST['gpiostatus']) == "turnon") {
-    $urlparams['gpiostatus'] = trim($_POST['gpiostatus']);
-}
-
-if(isset($_POST['gpiostatus']) && trim($_POST['gpiostatus']) == "turnoff") {
-    $urlparams['gpiostatus'] = trim($_POST['gpiostatus']);
 }
 
 if(isset($_POST['enableresume']) && trim($_POST['enableresume']) != "") {
@@ -496,7 +488,7 @@ if(isset($urlparams['rfidstatus']) && $urlparams['rfidstatus'] == "turnoff") {
     }
 }
 
-// start the gpio button service
+// start the advanced rotary control button service
 if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotarycontrolstatus'] == "turnon") {
     $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-advanced-rotary-control.service";
     if($debug == "true") { 
@@ -509,7 +501,7 @@ if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotar
     }
 }
 
-// stop the gpio button service
+// stop the advanced rotary control service
 if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotarycontrolstatus'] == "turnoff") {
     $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-advanced-rotary-control.service";
     if($debug == "true") { 
