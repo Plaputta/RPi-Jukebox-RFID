@@ -36,7 +36,7 @@ def card_removed():
 
 sensor = Button(4,pull_up=False)
 
-sensor.when_released = card_presented
-sensor.when_pressed = card_removed
+sensor.when_released = card_removed
+sensor.when_pressed = card_presented
 
 pause()
