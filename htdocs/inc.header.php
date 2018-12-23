@@ -285,6 +285,14 @@ if(isset($_POST['gpiostatus']) && trim($_POST['gpiostatus']) == "turnoff") {
     $urlparams['gpiostatus'] = trim($_POST['gpiostatus']);
 }
 
+if(isset($_POST['rgbledstatus']) && trim($_POST['rgbledstatus']) == "turnon") {
+    $urlparams['rgbledstatus'] = trim($_POST['rgbledstatus']);
+}
+
+if(isset($_POST['rgbledstatus']) && trim($_POST['rgbledstatus']) == "turnoff") {
+    $urlparams['rgbledstatus'] = trim($_POST['rgbledstatus']);
+}
+
 if(isset($_POST['enableresume']) && trim($_POST['enableresume']) != "") {
     $urlparams['enableresume'] = trim($_POST['enableresume']);
 }
@@ -519,6 +527,32 @@ if(isset($urlparams['gpiostatus']) && $urlparams['gpiostatus'] == "turnoff") {
         /* redirect to drop all the url parameters */
         header("Location: ".$conf['url_abs']);
         exit; 
+    }
+}
+
+// start the rgb leds service
+if(isset($urlparams['rgbledstatus']) && $urlparams['rgbledstatus'] == "turnon") {
+    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-rgb-leds.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
+    }
+}
+
+// stop the rgb leds service
+if(isset($urlparams['rgbledstatus']) && $urlparams['rgbledstatus'] == "turnoff") {
+    $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-rgb-leds.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
     }
 }
 

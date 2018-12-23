@@ -47,6 +47,7 @@ $lang['globalExternalInterfaces'] = "External Devices & Interfaces";
 $lang['globalIdleTime'] = "Idle Time";
 $lang['globalNotIdle'] = "Not Idle";
 $lang['globalGpioButtons'] = "GPIO Buttons";
+$lang['globalRGBLeds'] = "RGB Leds";
 $lang['globalRfidReader'] = "RFID Reader";
 $lang['globalEnabled'] = "Enabled";
 $lang['globalDisabled'] = "Disabled";

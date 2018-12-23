@@ -1,0 +1,13 @@
+[Unit]
+Description=Phoniebox Rotary Encoder Service
+After=network.target iptables.service firewalld.service
+
+[Service]
+Restart=always
+WorkingDirectory=/home/pi/RPi-Jukebox-RFID
+ExecStart=/usr/bin/python3 /home/pi/RPi-Jukebox-RFID/scripts/rgb-leds.py
+User=pi
+Group=pi
+
+[Install]
+WantedBy=multi-user.target

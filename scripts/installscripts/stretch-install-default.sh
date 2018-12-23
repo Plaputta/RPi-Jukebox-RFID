@@ -387,7 +387,12 @@ sudo iwconfig wlan0 power off
 
 # Install required packages
 sudo apt-get update
-sudo apt-get install apt-transport-https samba samba-common-bin python-dev python-pip gcc linux-headers-4.9 lighttpd php7.0-common php7.0-cgi php7.0 php7.0-fpm at mpd mpc mpg123 git ffmpeg python-mutagen python3-gpiozero
+sudo apt-get install apt-transport-https samba samba-common-bin python-dev python-pip python3-pip gcc linux-headers-4.9 lighttpd php7.0-common php7.0-cgi php7.0 php7.0-fpm at mpd mpc mpg123 git ffmpeg python-mutagen python3-gpiozero pigpio python3-pigpio
+
+sudo systemctl enable pigpiod.service
+
+# Install LED driver
+pip3 install adafruit-ws2801
 
 # Get github code
 cd /home/pi/
@@ -487,25 +492,29 @@ sudo rm /etc/systemd/system/rfid-reader.service
 sudo rm /etc/systemd/system/startup-sound.service
 sudo rm /etc/systemd/system/gpio-buttons.service
 sudo rm /etc/systemd/system/idle-watchdog.service
-echo "### Done with erasing old daemons. Stop ignoring errors!" 
+echo "### Done with erasing old daemons. Stop ignoring errors!"
 # 2. install new ones - this is version > 1.1.8-beta
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-rfid-reader.service.stretch-default.sample /etc/systemd/system/phoniebox-rfid-reader.service 
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-startup-sound.service.stretch-default.sample /etc/systemd/system/phoniebox-startup-sound.service
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-gpio-buttons.service.stretch-default.sample /etc/systemd/system/phoniebox-gpio-buttons.service
+sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-rgb-leds.service.stretch-default.sample /etc/systemd/system/phoniebox-rgb-leds.service
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-idle-watchdog.service.sample /etc/systemd/system/phoniebox-idle-watchdog.service
 sudo chown root:root /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chown root:root /etc/systemd/system/phoniebox-startup-sound.service
 sudo chown root:root /etc/systemd/system/phoniebox-gpio-buttons.service
+sudo chown root:root /etc/systemd/system/phoniebox-rgb-leds.service
 sudo chown root:root /etc/systemd/system/phoniebox-idle-watchdog.service
 sudo chmod 644 /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chmod 644 /etc/systemd/system/phoniebox-startup-sound.service
 sudo chmod 644 /etc/systemd/system/phoniebox-gpio-buttons.service
+sudo chmod 644 /etc/systemd/system/phoniebox-rgb-leds.service
 sudo chmod 644 /etc/systemd/system/phoniebox-idle-watchdog.service
 # enable the services needed
 sudo systemctl enable phoniebox-idle-watchdog
 sudo systemctl enable phoniebox-rfid-reader
 sudo systemctl enable phoniebox-startup-sound
 sudo systemctl enable phoniebox-gpio-buttons
+sudo systemctl enable phoniebox-rgb-leds
 
 # copy mp3s for startup and shutdown sound to the right folder
 cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/startupsound.mp3.sample /home/pi/RPi-Jukebox-RFID/shared/startupsound.mp3

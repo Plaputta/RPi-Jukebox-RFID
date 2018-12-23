@@ -35,6 +35,7 @@ NOW=`date +%Y-%m-%d.%H:%M:%S`
 # volumedown
 # getvolume
 # getmaxvolume
+# getplaystatus
 # setvolstep
 # getvolstep
 # playerstop
@@ -314,6 +315,11 @@ case $COMMAND in
         else
             $PATHDATA/resume_play.sh -c=resume -v=$VALUE
         fi
+        ;;
+    getplaystatus)
+        # get play status (pause/play/stop)
+        PLAYSTATE=$(echo -e "status\nclose" | nc -w 1 localhost 6600 | grep -o -P '(?<=state: ).*')
+        echo $PLAYSTATE
         ;;
     playerseek)
         # jumps back and forward in track.
