@@ -33,10 +33,11 @@ def set_play_pixels(play = False, card_present = None):
 def get_card_status(gpio = None, level = None, tick = None):
   if not level is None and level < 2:
     set_play_pixels(card_present=bool(level))
-    sleep(0.2)
     get_play()
 
-def get_play(gpio = None, level = None, tick = None):
+def get_play(gpio = None, level = None, tick = None, delayed=True):
+  if (delayed):
+    sleep(0.2)
   status = check_output("./scripts/playout_controls.sh -c=getplaystatus", shell=True).decode(sys.stdout.encoding).strip(' \t\n\r')
   set_play_pixels(play=status == "play")
 
@@ -58,31 +59,31 @@ def exit_handler(signal, frame):
 
 def update_handler(signal, frame):
   get_volume()
-  get_play()
+  get_play(delayed=False)
 
 signal.signal(signal.SIGINT, exit_handler)
 signal.signal(signal.SIGTERM, exit_handler)
 signal.signal(signal.SIGALRM, update_handler)
 
-pi = pigpio.pi()
-
 pixels.clear()
 pixels.show()
+
+pi = pigpio.pi()
 
 if pi.get_mode(4) != pigpio.INPUT:
   pi.set_mode(4, pigpio.INPUT)
   pi.set_pull_up_down(4, pigpio.PUD_UP)
-  pi.set_glitch_filter(4, 100)
+  pi.set_glitch_filter(4, 300)
 
 if pi.get_mode(3) != pigpio.INPUT:
   pi.set_mode(3, pigpio.INPUT)
   pi.set_pull_up_down(3, pigpio.PUD_UP)
-  pi.set_glitch_filter(3, 100)
+  pi.set_glitch_filter(3, 300)
 
 if pi.get_mode(5) != pigpio.INPUT:
   pi.set_mode(5, pigpio.INPUT)
   pi.set_pull_up_down(5, pigpio.PUD_UP)
-  pi.set_glitch_filter(5, 30)
+  pi.set_glitch_filter(5, 100)
 
 pi.callback(4, pigpio.EITHER_EDGE, get_card_status)
 pi.callback(3, pigpio.RISING_EDGE, get_play)
