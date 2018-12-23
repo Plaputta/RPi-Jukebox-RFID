@@ -11,7 +11,6 @@ echo "*** Audio_Folders_Path:" $(cat /home/pi/RPi-Jukebox-RFID/settings/Audio_Fo
 echo "*** Audio_Volume_Change_Step:" $(cat /home/pi/RPi-Jukebox-RFID/settings/Audio_Volume_Change_Step)
 echo "*** Max_Volume_Limit:" $(cat /home/pi/RPi-Jukebox-RFID/settings/Max_Volume_Limit)
 echo "*** Idle_Time_Before_Shutdown:" $(cat /home/pi/RPi-Jukebox-RFID/settings/Idle_Time_Before_Shutdown)
-echo "*** Second_Swipe:" $(cat /home/pi/RPi-Jukebox-RFID/settings/Second_Swipe)
 echo "*** Playlists_Folders_Path:" $(cat /home/pi/RPi-Jukebox-RFID/settings/Playlists_Folders_Path)
 echo "*** ShowCover:" $(cat /home/pi/RPi-Jukebox-RFID/settings/ShowCover)
 

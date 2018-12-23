@@ -44,10 +44,7 @@ if($debug == "true") {
         </a>  | 
         <a href="#externalInterfaces" class="xbtn xbtn-default ">
         <i class='mdi mdi-usb'></i> <?php print $lang['globalExternalInterfaces']; ?>
-        </a>  | 
-        <a href="#secondSwipe" class="xbtn xbtn-default ">
-        <i class='mdi mdi-cards-outline'></i> <?php print $lang['settingsSecondSwipe']; ?>
-        </a> 
+        </a>
   </div>
 </div>
         <br/>
@@ -168,23 +165,6 @@ include("inc.setWebUI.php");
       <div class="panel-body">
 <?php
 include("inc.setInputDevices.php");
-?>
-      </div><!-- /.panel-body -->
-    
-  </div><!-- /.panel -->
-</div><!-- /.panel-group -->
-
-<div class="panel-group">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title"><a name="secondSwipe"></a>
-        <i class='mdi mdi-cards-outline'></i> <?php print $lang['settingsSecondSwipe']; ?>
-      </h4>
-    </div><!-- /.panel-heading -->
-    
-      <div class="panel-body">
-<?php
-include("inc.setSecondSwipe.php");
 ?>
       </div><!-- /.panel-body -->
     

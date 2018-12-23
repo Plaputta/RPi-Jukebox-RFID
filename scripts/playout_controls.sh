@@ -42,6 +42,7 @@ NOW=`date +%Y-%m-%d.%H:%M:%S`
 # playernext
 # playerprev
 # playerpause
+# playerpausereal
 # playerplay
 # playerreplay
 # playerrepeat
@@ -298,6 +299,11 @@ case $COMMAND in
         # pause current track
         # mpc knows "pause", which pauses only, and "toggle" which pauses and unpauses, whatever is needed
         mpc toggle
+        ;;
+    playerpausereal)
+        # pause current track
+        # mpc knows "pause", which pauses only, and "toggle" which pauses and unpauses, whatever is needed
+        mpc pause
         ;;
     playerplay)
         # play / resume current track

@@ -23,20 +23,32 @@
 #                                             +----+
 
 
-from gpiozero import Button
-from signal import pause
+import pigpio
+import signal
 from subprocess import check_call
 
-def card_presented():
-   pass  # Here you could implement a procedure that is run when a card was read successfully, the recommended option
-         # is to set the "Second Swipe" setting to "Toggle Pause and Play"
+def get_card_status(gpio, level, tick):
+   if level == 1:
+      print("ON")
+      pass # Remember to set the "Second Swipe" setting to nothing
+   elif level == 0:
+      print("OFF")
+      check_call("./scripts/playout_controls.sh -c=playerpausereal", shell=True)
 
-def card_removed():
-   check_call("./scripts/playout_controls.sh -c=playerpause", shell=True)
+def exit_handler(signal, frame):
+  exit(0)
 
-sensor = Button(4,pull_up=False)
+signal.signal(signal.SIGINT, exit_handler)
+signal.signal(signal.SIGTERM, exit_handler)
 
-sensor.when_released = card_removed
-sensor.when_pressed = card_presented
+pi = pigpio.pi()
 
-pause()
+if pi.get_mode(4) != pigpio.INPUT:
+  pi.set_mode(4, pigpio.INPUT)
+  pi.set_pull_up_down(4, pigpio.PUD_UP)
+  pi.set_glitch_filter(4, 300)
+
+pi.callback(4, pigpio.EITHER_EDGE, get_card_status)
+
+while True:
+   signal.pause()
