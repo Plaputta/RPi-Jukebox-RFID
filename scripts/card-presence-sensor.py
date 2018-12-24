@@ -27,19 +27,19 @@ import pigpio
 import signal
 from subprocess import check_call
 
-def get_card_status(gpio, level, tick):
-   if level == 1:
-      print("ON")
-      pass # Remember to set the "Second Swipe" setting to nothing
-   elif level == 0:
-      print("OFF")
-      check_call("./scripts/playout_controls.sh -c=playerpausereal", shell=True)
+def card_removed(gpio = None, level = None, tick = None):
+  check_call("./scripts/playout_controls.sh -c=playerpausereal", shell=True)
 
 def exit_handler(signal, frame):
   exit(0)
 
+def update_handler(signal, frame):
+  if (pi.read(4) == 0):
+    card_removed()
+
 signal.signal(signal.SIGINT, exit_handler)
 signal.signal(signal.SIGTERM, exit_handler)
+signal.signal(signal.SIGALRM, update_handler)
 
 pi = pigpio.pi()
 
@@ -48,7 +48,8 @@ if pi.get_mode(4) != pigpio.INPUT:
   pi.set_pull_up_down(4, pigpio.PUD_UP)
   pi.set_glitch_filter(4, 300)
 
-pi.callback(4, pigpio.EITHER_EDGE, get_card_status)
+pi.callback(4, pigpio.FALLING_EDGE, card_removed)
 
 while True:
-   signal.pause()
+  signal.alarm(1)
+  signal.pause()
