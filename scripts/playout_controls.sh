@@ -31,6 +31,7 @@ NOW=`date +%Y-%m-%d.%H:%M:%S`
 # mute
 # setvolume
 # setmaxvolume
+# setminvolume
 # volumeup
 # volumedown
 # getvolume
@@ -86,6 +87,11 @@ if [ ! -f $PATHDATA/../settings/Max_Volume_Limit ]; then
 fi
 # 2. then|or read value from file
 MAXVOL=`cat $PATHDATA/../settings/Max_Volume_Limit`
+if [ ! -f $PATHDATA/../settings/Min_Volume_Limit ]; then
+    echo "0" > $PATHDATA/../settings/Min_Volume_Limit
+fi
+# 2. then|or read value from file
+MINVOL=`cat $PATHDATA/../settings/Min_Volume_Limit`
 
 #################################
 # path to file storing the current volume level
@@ -204,8 +210,14 @@ case $COMMAND in
         #increase volume only if VOLPERCENT is below the max volume limit
         if [ $VALUE -le $MAXVOL ];
         then
+            if [ $VALUE -lt $MINVOL ];
+            then
+                # if we are under the min volume limit, set the volume to minvol
+                echo -e setvol $MINVOL\\nclose | nc -w 1 localhost 6600
+            else
             # set volume level in percent
             echo -e setvol $VALUE\\nclose | nc -w 1 localhost 6600
+            fi
         else
             # if we are over the max volume limit, set the volume to maxvol
             echo -e setvol $MAXVOL\\nclose | nc -w 1 localhost 6600
@@ -221,8 +233,14 @@ case $COMMAND in
             #increase volume only if VOLPERCENT is below the max volume limit
             if [ $VOLPERCENT -le $MAXVOL ];
             then
-                # set volume level in percent
-                echo -e volume +$VOLSTEP\\nclose | nc -w 1 localhost 6600
+                if [ $VOLPERCENT -ge $MINVOL ];
+                then
+                    # set volume level in percent
+                    echo -e volume +$VOLSTEP\\nclose | nc -w 1 localhost 6600
+                else
+                    # if we are under the min volume limit, set the volume to minvol
+                    echo -e setvol $MINVOL\\nclose | nc -w 1 localhost 6600
+                fi
             else
                 # if we are over the max volume limit, set the volume to maxvol
                 echo -e setvol $MAXVOL\\nclose | nc -w 1 localhost 6600
@@ -238,8 +256,18 @@ case $COMMAND in
     volumedown)
         if [ ! -f $VOLFILE ]; then
             # $VOLFILE does NOT exist == audio on
+            # read volume in percent
+            VOLPERCENT=$(echo -e status\\nclose | nc -w 1 localhost 6600 | grep -o -P '(?<=volume: ).*')
             # decrease by $VOLSTEP
-            echo -e volume -$VOLSTEP\\nclose | nc -w 1 localhost 6600
+            VOLPERCENT=`expr ${VOLPERCENT} - ${VOLSTEP}`
+            if [ $VOLPERCENT -ge $MINVOL ];
+            then
+                # set volume level in percent
+                echo -e volume -$VOLSTEP\\nclose | nc -w 1 localhost 6600
+            else
+                # if we are under the min volume limit, set the volume to minvol
+                echo -e setvol $MINVOL\\nclose | nc -w 1 localhost 6600
+            fi
         else
             # $VOLFILE DOES exist == audio off
             # read volume level from $VOLFILE and set as percent
@@ -266,6 +294,20 @@ case $COMMAND in
         ;;
     getmaxvolume)
         echo $MAXVOL
+        ;;
+    setminvolume)
+        # read volume in percent
+        VOLPERCENT=$(echo -e status\\nclose | nc -w 1 localhost 6600 | grep -o -P '(?<=volume: ).*')
+        # if volume of the box is less than wanted minvolume, set volume to minvolume
+        if [ $VOLPERCENT -lt $VALUE ];
+        then
+            echo -e setvol $VALUE | nc -w 1 localhost 6600
+        fi
+        # write new value to file
+        echo "$VALUE" > $PATHDATA/../settings/Min_Volume_Limit
+        ;;
+    getminvolume)
+        echo $MINVOL
         ;;
     setvolstep)
         # write new value to file

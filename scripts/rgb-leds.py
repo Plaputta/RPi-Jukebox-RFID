@@ -47,17 +47,31 @@ def get_volume(gpio = None, level = None, tick = None):
   vol_str = check_output("./scripts/playout_controls.sh -c=getvolume", shell=True).decode(sys.stdout.encoding).strip(' \t\n\r')
   if len(vol_str):
     vol = int(vol_str)
-  print(str(vol))
+  vol_range = max_vol - min_vol
+  vol_adj = min(vol, max_vol) - min_vol
+  vol_percent = (vol_adj / vol_range) * 100
+  print(vol,vol_range, vol_adj, vol_percent)
   for i in range(10):
-    pixels.set_pixel(2+i, Adafruit_WS2801.RGB_to_color(0, 20, 20) if vol > i*10 else Adafruit_WS2801.RGB_to_color(0, 0, 0))
+    pixels.set_pixel(2+i, Adafruit_WS2801.RGB_to_color(0, 20, 20) if vol_percent > i*10 else Adafruit_WS2801.RGB_to_color(0, 0, 0))
   pixels.show()
+
+def get_limits():
+  global max_vol, min_vol
+  vol_str = check_output("./scripts/playout_controls.sh -c=getmaxvolume", shell=True).decode(sys.stdout.encoding).strip(' \t\n\r')
+  if len(vol_str):
+    max_vol = int(vol_str)
+
+  vol_str = check_output("./scripts/playout_controls.sh -c=getminvolume", shell=True).decode(sys.stdout.encoding).strip(' \t\n\r')
+  if len(vol_str):
+    min_vol = int(vol_str)
 
 def exit_handler(signal, frame):
   pixels.clear()
   pixels.show()
   exit(0)
 
-def update_handler(signal, frame):
+def update_handler(signal = None, frame = None):
+  get_limits()
   get_volume()
   get_play(delayed=False)
 
@@ -85,9 +99,14 @@ if pi.get_mode(5) != pigpio.INPUT:
   pi.set_pull_up_down(5, pigpio.PUD_UP)
   pi.set_glitch_filter(5, 100)
 
+max_vol = 100
+min_vol = 0
+
 pi.callback(4, pigpio.EITHER_EDGE, get_card_status)
 pi.callback(3, pigpio.RISING_EDGE, get_play)
 pi.callback(5, pigpio.RISING_EDGE, get_volume)
+
+update_handler()
 
 while True:
   signal.alarm(2)

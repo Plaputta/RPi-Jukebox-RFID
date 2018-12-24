@@ -85,9 +85,14 @@ if($debug == "true") {
 <?php
 include("inc.setVolume.php");
 
-include("inc.setMaxVolume.php");
-
 include("inc.setVolumeStep.php");
+?>
+      </div><!-- / .row -->
+      <div class="row">
+<?php
+include("inc.setMinVolume.php");
+
+include("inc.setMaxVolume.php");
 ?>
       </div><!-- / .row -->
     </div><!-- /.panel-body -->

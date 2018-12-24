@@ -134,6 +134,9 @@ if(isset($_GET['volume']) && trim($_GET['volume']) != "") {
 if(isset($_GET['maxvolume']) && trim($_GET['maxvolume']) != "") {
     $urlparams['maxvolume'] = trim($_GET['maxvolume']);
 }
+if(isset($_GET['minvolume']) && trim($_GET['minvolume']) != "") {
+    $urlparams['minvolume'] = trim($_GET['minvolume']);
+}
 
 if(isset($_GET['volstep']) && trim($_GET['volstep']) != "") {
     $urlparams['volstep'] = trim($_GET['volstep']);
@@ -231,6 +234,10 @@ if(isset($_POST['volume']) && trim($_POST['volume']) != "") {
 
 if(isset($_POST['maxvolume']) && trim($_POST['maxvolume']) != "") {
     $urlparams['maxvolume'] = trim($_POST['maxvolume']);
+}
+
+if(isset($_POST['minvolume']) && trim($_POST['minvolume']) != "") {
+    $urlparams['minvolume'] = trim($_POST['minvolume']);
 }
 
 if(isset($_POST['volstep']) && trim($_POST['volstep']) != "") {
@@ -370,6 +377,18 @@ if(isset($urlparams['maxvolume'])) {
         /* redirect to drop all the url parameters */
         header("Location: ".$conf['url_abs']);
         exit; 
+    }
+}
+
+if(isset($urlparams['minvolume'])) {
+    $exec = "/usr/bin/sudo ".$conf['scripts_abs']."/playout_controls.sh -c=setminvolume -v=".$urlparams['minvolume'];
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
     }
 }
 

@@ -9,8 +9,11 @@ Volume Select Form
         $volumevaluedisplay = round($volumevalue);
 		
         $maxvolumevalue = exec("/usr/bin/sudo ".$conf['scripts_abs']."/playout_controls.sh -c=getmaxvolume");
+        $minvolumevalue = exec("/usr/bin/sudo ".$conf['scripts_abs']."/playout_controls.sh -c=getminvolume");
         $maxvalueselect = round(($maxvolumevalue/10))*10;
         $maxvaluedisplay = round($maxvolumevalue);
+        $minvalueselect = round(($minvolumevalue/10))*10;
+        $minvaluedisplay = round($minvolumevalue);
         ?>
         <div class="col-md-4 col-sm-6">
             <div class="row" style="margin-bottom:1em;">
@@ -27,11 +30,11 @@ Volume Select Form
                         if($volumevalueselect == $i) {
                             print " selected";
                         }
-			if($i > $maxvalueselect ) {
+			if($i > $maxvalueselect || $i < $minvalueselect) {
                             print " disabled";
                         }
 			print ">".$i."%";
-			if($i == $maxvalueselect ) {
+			if($i == $maxvalueselect || $i == $minvalueselect) {
                             print " limit";
                         }
                         print "</option>";
