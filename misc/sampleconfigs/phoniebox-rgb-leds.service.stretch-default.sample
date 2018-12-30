@@ -1,5 +1,5 @@
 [Unit]
-Description=Phoniebox Rotary Encoder Service
+Description=Phoniebox RGB LEDs Service
 After=network.target iptables.service firewalld.service
 
 [Service]
