@@ -1,9 +1,14 @@
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
+ctrl_interface=/var/run/wpa_supplicant
+eapol_version=1
 country=%WIFIcountryCode%
 
+ap_scan=1
+
 network={
-	ssid="%WIFIssid%"
-	psk="%WIFIpass%"
-	key_mgmt=WPA-PSK
+        ssid=""
+        scan_ssid=1
+        proto=RSN WPA
+        key_mgmt=WPA-PSK
+        pairwise=CCMP TKIP
+        group=CCMP TKIP
 }

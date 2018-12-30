@@ -55,7 +55,7 @@ then
     # cp /etc/hostapd/hostapd.conf hostapd.conf.stretch.sample
     # cp /etc/default/hostapd hostapd.stretch.sample
     # cp /etc/dnsmasq.conf dnsmasq.conf.stretch.sample
-    # cp /etc/network/interfaces interfaces.stretch.sample
+    # cp /etc/network/interfaces.stretch-wps.sample interfaces.stretch-wps.sample.stretch.sample
     # WIFIcountryCode
     # https://www.cisco.com/en/US/products/ps6305/products_configuration_guide_chapter09186a00804ddd8a.html
 

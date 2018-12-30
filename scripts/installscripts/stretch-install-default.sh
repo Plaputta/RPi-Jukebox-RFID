@@ -51,9 +51,8 @@ echo "#####################################################
 #
 # CONFIGURE WIFI
 #
-# Requires SSID, WiFi password and the static IP you want 
-# to assign to your Phoniebox.
-# (Note: can be done manually later, if you are unsure.)
+# Requires the country, later activate WPS on your router and within one minute
+# hit the WPS button on your Phoniebox.
 "
 read -r -p "Do you want to configure your WiFi? [Y/n] " response
 case "$response" in
@@ -69,32 +68,13 @@ case "$response" in
         ;;
     *)
     	WIFIconfig=YES
-        #Ask for ssid
-        echo "* Type SSID name"
-        read INPUT
-        WIFIssid="$INPUT"
         #Ask for wifi country code
         echo "* WiFi Country Code (e.g. DE, GB, CZ or US)"
         read INPUT
         WIFIcountryCode="$INPUT"
-        #Ask for password
-        echo "* Type password"
-        read INPUT
-        WIFIpass="$INPUT"
-        #Ask for IP
-        echo "* Static IP (e.g. 192.168.1.199)"
-        read INPUT
-        WIFIip="$INPUT"
-        #Ask for Router IP
-        echo "* Router IP (e.g. 192.168.1.1)"
-        read INPUT
-        WIFIipRouter="$INPUT"
         echo "Your WiFi config:"
-        echo "SSID      : $WIFIssid"
+        echo "Conntection: WPS"
         echo "WiFi Country Code      : $WIFIcountryCode"
-        echo "Password  : $WIFIpass"
-        echo "Static IP : $WIFIip"
-        echo "Router IP : $WIFIipRouter"
         read -r -p "Are these values correct? [Y/n] " response
         case "$response" in
             [nN][oO]|[nN])
@@ -106,10 +86,6 @@ case "$response" in
                 # append variables to config file
                 echo "WIFIconfig=\"$WIFIconfig\"" >> $PATHDATA/PhonieboxInstall.conf
                 echo "WIFIcountryCode=\"$WIFIcountryCode\"" >> $PATHDATA/PhonieboxInstall.conf
-                echo "WIFIssid=\"$WIFIssid\"" >> $PATHDATA/PhonieboxInstall.conf
-                echo "WIFIpass=\"$WIFIpass\"" >> $PATHDATA/PhonieboxInstall.conf
-                echo "WIFIip=\"$WIFIip\"" >> $PATHDATA/PhonieboxInstall.conf
-                echo "WIFIipRouter=\"$WIFIipRouter\"" >> $PATHDATA/PhonieboxInstall.conf
                 ;;
         esac
         ;;
@@ -484,17 +460,20 @@ sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-advanced-rotary-c
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-card-presence-sensor.service.stretch-default.sample /etc/systemd/system/phoniebox-card-presence-sensor.service
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-rgb-leds.service.stretch-default.sample /etc/systemd/system/phoniebox-rgb-leds.service
 sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-idle-watchdog.service.sample /etc/systemd/system/phoniebox-idle-watchdog.service
+sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/phoniebox-wifi-wps-ip.service.stretch-default.sample /etc/systemd/system/phoniebox-wifi-wps-ip.service
 sudo chown root:root /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chown root:root /etc/systemd/system/phoniebox-startup-sound.service
 sudo chown root:root /etc/systemd/system/phoniebox-advanced-rotary-control.service
 sudo chown root:root /etc/systemd/system/phoniebox-card-presence-sensor.service
 sudo chown root:root /etc/systemd/system/phoniebox-rgb-leds.service
+sudo chown root:root /etc/systemd/system/phoniebox-wifi-wps-ip.service
 sudo chown root:root /etc/systemd/system/phoniebox-idle-watchdog.service
 sudo chmod 644 /etc/systemd/system/phoniebox-rfid-reader.service
 sudo chmod 644 /etc/systemd/system/phoniebox-startup-sound.service
 sudo chmod 644 /etc/systemd/system/phoniebox-advanced-rotary-control.service
 sudo chmod 644 /etc/systemd/system/phoniebox-card-presence-sensor.service
 sudo chmod 644 /etc/systemd/system/phoniebox-rgb-leds.service
+sudo chmod 644 /etc/systemd/system/phoniebox-wifi-wps-ip.service
 sudo chmod 644 /etc/systemd/system/phoniebox-idle-watchdog.service
 # enable the services needed
 sudo systemctl enable phoniebox-idle-watchdog
@@ -503,6 +482,7 @@ sudo systemctl enable phoniebox-startup-sound
 sudo systemctl enable phoniebox-advanced-rotary-control
 sudo systemctl enable phoniebox-card-presence-sensor
 sudo systemctl enable phoniebox-rgb-leds
+sudo systemctl enable phoniebox-wifi-wps-ip
 
 # copy mp3s for startup and shutdown sound to the right folder
 cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/startupsound.mp3.sample /home/pi/RPi-Jukebox-RFID/shared/startupsound.mp3
@@ -522,36 +502,14 @@ sudo chmod 640 /etc/mpd.conf
 mpc update
 
 ###############################
-# WiFi settings (SSID password)
-#
-# https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
-# 
-# $WIFIssid
-# $WIFIpass
-# $WIFIip
-# $WIFIipRouter
+
 if [ $WIFIconfig == "YES" ]
 then
-    # DHCP configuration settings
-    #-rw-rw-r-- 1 root netdev 0 Apr 17 11:25 /etc/dhcpcd.conf
-    sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/dhcpcd.conf.stretch-default2-noHotspot.sample /etc/dhcpcd.conf
-    # Change IP for router and Phoniebox
-    sudo sed -i 's/%WIFIip%/'"$WIFIip"'/' /etc/dhcpcd.conf
-    sudo sed -i 's/%WIFIipRouter%/'"$WIFIipRouter"'/' /etc/dhcpcd.conf
-    sudo sed -i 's/%WIFIcountryCode%/'"$WIFIcountryCode"'/' /etc/dhcpcd.conf
-    # Change user:group and access mod
-    sudo chown root:netdev /etc/dhcpcd.conf
-    sudo chmod 664 /etc/dhcpcd.conf
-    
-    # WiFi SSID & Password
-    # -rw-rw-r-- 1 root netdev 137 Jul 16 08:53 /etc/wpa_supplicant/wpa_supplicant.conf
+    # WiFi conf
     sudo cp /home/pi/RPi-Jukebox-RFID/misc/sampleconfigs/wpa_supplicant.conf.stretch.sample /etc/wpa_supplicant/wpa_supplicant.conf
-    sudo sed -i 's/%WIFIssid%/'"$WIFIssid"'/' /etc/wpa_supplicant/wpa_supplicant.conf
-    sudo sed -i 's/%WIFIpass%/'"$WIFIpass"'/' /etc/wpa_supplicant/wpa_supplicant.conf
     sudo sed -i 's/%WIFIcountryCode%/'"$WIFIcountryCode"'/' /etc/wpa_supplicant/wpa_supplicant.conf
     sudo chown root:netdev /etc/wpa_supplicant/wpa_supplicant.conf
     sudo chmod 664 /etc/wpa_supplicant/wpa_supplicant.conf
-
 fi
 
 # start DHCP
