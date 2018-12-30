@@ -48,6 +48,7 @@ $lang['globalIdleTime'] = "Idle Time";
 $lang['globalNotIdle'] = "Not Idle";
 $lang['globalAdvancedRotaryControl'] = "Advanced Rotary Control";
 $lang['globalCardPresenceSensor'] = "Card Presence Sensor";
+$lang['globalRGBLeds'] = "RGB Leds";
 $lang['globalRfidReader'] = "RFID Reader";
 $lang['globalEnabled'] = "Enabled";
 $lang['globalDisabled'] = "Disabled";
@@ -149,6 +150,7 @@ $lang['trackEditDeleteYes'] = "Yes, DELETE this track";
 */
 $lang['settingsVolChangePercent'] = "Vol. Change %";
 $lang['settingsMaxVol'] = "Maximum Volume";
+$lang['settingsMinVol'] = "Minimum Volume";
 $lang['settingsWifiRestart'] = "The changes applied to your WiFi connection require a restart to take effect.";
 $lang['settingsWifiSsidPlaceholder'] = "e.g.: PhonieHomie";
 $lang['settingsWifiSsidHelp'] = "The name under which your WiFi shows up as 'available network'";

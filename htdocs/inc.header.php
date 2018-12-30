@@ -86,6 +86,7 @@ $conf['settings_abs'] = realpath(getcwd().'/../settings/');
 */
 $Audio_Folders_Path = trim(file_get_contents($conf['settings_abs'].'/Audio_Folders_Path'));
 $Latest_Folder_Played = trim(file_get_contents($conf['settings_abs'].'/Latest_Folder_Played'));
+$Second_Swipe = trim(file_get_contents($conf['settings_abs'].'/Second_Swipe'));
 if(file_exists($conf['settings_abs'].'/ShowCover')) {
     $ShowCover = trim(file_get_contents($conf['settings_abs'].'/ShowCover'));
 } else {
@@ -133,6 +134,9 @@ if(isset($_GET['volume']) && trim($_GET['volume']) != "") {
 if(isset($_GET['maxvolume']) && trim($_GET['maxvolume']) != "") {
     $urlparams['maxvolume'] = trim($_GET['maxvolume']);
 }
+if(isset($_GET['minvolume']) && trim($_GET['minvolume']) != "") {
+    $urlparams['minvolume'] = trim($_GET['minvolume']);
+}
 
 if(isset($_GET['volstep']) && trim($_GET['volstep']) != "") {
     $urlparams['volstep'] = trim($_GET['volstep']);
@@ -178,20 +182,12 @@ if(isset($_GET['rfidstatus']) && trim($_GET['rfidstatus']) == "turnoff") {
     $urlparams['rfidstatus'] = trim($_GET['rfidstatus']);
 }
 
-if(isset($_GET['advancedrotarycontrolstatus']) && trim($_GET['advancedrotarycontrolstatus']) == "turnon") {
-    $urlparams['advancedrotarycontrolstatus'] = trim($_GET['advancedrotarycontrolstatus']);
+if(isset($_GET['gpiostatus']) && trim($_GET['gpiostatus']) == "turnon") {
+    $urlparams['gpiostatus'] = trim($_GET['gpiostatus']);
 }
 
-if(isset($_GET['advancedrotarycontrolstatus']) && trim($_GET['advancedrotarycontrolstatus']) == "turnoff") {
-    $urlparams['advancedrotarycontrolstatus'] = trim($_GET['advancedrotarycontrolstatus']);
-}
-
-if(isset($_GET['cardpresencesensorstatus']) && trim($_GET['cardpresencesensorstatus']) == "turnon") {
-    $urlparams['cardpresencesensorstatus'] = trim($_GET['cardpresencesensorstatus']);
-}
-
-if(isset($_GET['cardpresencesensorstatus']) && trim($_GET['cardpresencesensorstatus']) == "turnoff") {
-    $urlparams['cardpresencesensorstatus'] = trim($_GET['cardpresencesensorstatus']);
+if(isset($_GET['gpiostatus']) && trim($_GET['gpiostatus']) == "turnoff") {
+    $urlparams['gpiostatus'] = trim($_GET['gpiostatus']);
 }
 
 if(isset($_GET['enableresume']) && trim($_GET['enableresume']) != "") {
@@ -240,6 +236,10 @@ if(isset($_POST['maxvolume']) && trim($_POST['maxvolume']) != "") {
     $urlparams['maxvolume'] = trim($_POST['maxvolume']);
 }
 
+if(isset($_POST['minvolume']) && trim($_POST['minvolume']) != "") {
+    $urlparams['minvolume'] = trim($_POST['minvolume']);
+}
+
 if(isset($_POST['volstep']) && trim($_POST['volstep']) != "") {
     $urlparams['volstep'] = trim($_POST['volstep']);
 }
@@ -282,6 +282,14 @@ if(isset($_POST['rfidstatus']) && trim($_POST['rfidstatus']) == "turnon") {
 
 if(isset($_POST['rfidstatus']) && trim($_POST['rfidstatus']) == "turnoff") {
     $urlparams['rfidstatus'] = trim($_POST['rfidstatus']);
+}
+
+if(isset($_POST['rgbledstatus']) && trim($_POST['rgbledstatus']) == "turnon") {
+    $urlparams['rgbledstatus'] = trim($_POST['rgbledstatus']);
+}
+
+if(isset($_POST['rgbledstatus']) && trim($_POST['rgbledstatus']) == "turnoff") {
+    $urlparams['rgbledstatus'] = trim($_POST['rgbledstatus']);
 }
 
 if(isset($_POST['enableresume']) && trim($_POST['enableresume']) != "") {
@@ -361,6 +369,18 @@ if(isset($urlparams['maxvolume'])) {
         /* redirect to drop all the url parameters */
         header("Location: ".$conf['url_abs']);
         exit; 
+    }
+}
+
+if(isset($urlparams['minvolume'])) {
+    $exec = "/usr/bin/sudo ".$conf['scripts_abs']."/playout_controls.sh -c=setminvolume -v=".$urlparams['minvolume'];
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
     }
 }
 
@@ -495,22 +515,9 @@ if(isset($urlparams['rfidstatus']) && $urlparams['rfidstatus'] == "turnoff") {
     }
 }
 
-// start the advanced rotary control button service
-if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotarycontrolstatus'] == "turnon") {
-    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-advanced-rotary-control.service";
-    if($debug == "true") { 
-        print "Command: ".$exec; 
-    } else { 
-        exec($exec);
-        /* redirect to drop all the url parameters */
-        header("Location: ".$conf['url_abs']);
-        exit; 
-    }
-}
-
-// stop the advanced rotary control service
-if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotarycontrolstatus'] == "turnoff") {
-    $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-advanced-rotary-control.service";
+// start the gpio button service
+if(isset($urlparams['gpiostatus']) && $urlparams['gpiostatus'] == "turnon") {
+    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-gpio-buttons.service";
     if($debug == "true") { 
         print "Command: ".$exec; 
     } else { 
@@ -537,6 +544,32 @@ if(isset($urlparams['cardpresencesensorstatus']) && $urlparams['cardpresencesens
 // stop the card presence sensor service
 if(isset($urlparams['cardpresencesensorstatus']) && $urlparams['cardpresencesensorstatus'] == "turnoff") {
     $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-card-presence-sensor.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
+    }
+}
+
+// start the rgb leds service
+if(isset($urlparams['rgbledstatus']) && $urlparams['rgbledstatus'] == "turnon") {
+    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-rgb-leds.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
+    }
+}
+
+// stop the rgb leds service
+if(isset($urlparams['rgbledstatus']) && $urlparams['rgbledstatus'] == "turnoff") {
+    $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-rgb-leds.service";
     if($debug == "true") {
         print "Command: ".$exec;
     } else {
