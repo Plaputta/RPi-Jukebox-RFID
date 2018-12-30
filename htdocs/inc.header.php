@@ -86,7 +86,6 @@ $conf['settings_abs'] = realpath(getcwd().'/../settings/');
 */
 $Audio_Folders_Path = trim(file_get_contents($conf['settings_abs'].'/Audio_Folders_Path'));
 $Latest_Folder_Played = trim(file_get_contents($conf['settings_abs'].'/Latest_Folder_Played'));
-$Second_Swipe = trim(file_get_contents($conf['settings_abs'].'/Second_Swipe'));
 if(file_exists($conf['settings_abs'].'/ShowCover')) {
     $ShowCover = trim(file_get_contents($conf['settings_abs'].'/ShowCover'));
 } else {
@@ -185,6 +184,14 @@ if(isset($_GET['advancedrotarycontrolstatus']) && trim($_GET['advancedrotarycont
 
 if(isset($_GET['advancedrotarycontrolstatus']) && trim($_GET['advancedrotarycontrolstatus']) == "turnoff") {
     $urlparams['advancedrotarycontrolstatus'] = trim($_GET['advancedrotarycontrolstatus']);
+}
+
+if(isset($_GET['cardpresencesensorstatus']) && trim($_GET['cardpresencesensorstatus']) == "turnon") {
+    $urlparams['cardpresencesensorstatus'] = trim($_GET['cardpresencesensorstatus']);
+}
+
+if(isset($_GET['cardpresencesensorstatus']) && trim($_GET['cardpresencesensorstatus']) == "turnoff") {
+    $urlparams['cardpresencesensorstatus'] = trim($_GET['cardpresencesensorstatus']);
 }
 
 if(isset($_GET['enableresume']) && trim($_GET['enableresume']) != "") {
@@ -511,6 +518,32 @@ if(isset($urlparams['advancedrotarycontrolstatus']) && $urlparams['advancedrotar
         /* redirect to drop all the url parameters */
         header("Location: ".$conf['url_abs']);
         exit; 
+    }
+}
+
+// start the card presence sensor service
+if(isset($urlparams['cardpresencesensorstatus']) && $urlparams['cardpresencesensorstatus'] == "turnon") {
+    $exec = "/usr/bin/sudo /bin/systemctl start phoniebox-card-presence-sensor.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
+    }
+}
+
+// stop the card presence sensor service
+if(isset($urlparams['cardpresencesensorstatus']) && $urlparams['cardpresencesensorstatus'] == "turnoff") {
+    $exec = "/usr/bin/sudo /bin/systemctl stop phoniebox-card-presence-sensor.service";
+    if($debug == "true") {
+        print "Command: ".$exec;
+    } else {
+        exec($exec);
+        /* redirect to drop all the url parameters */
+        header("Location: ".$conf['url_abs']);
+        exit;
     }
 }
 

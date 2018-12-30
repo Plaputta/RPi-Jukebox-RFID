@@ -64,17 +64,6 @@ fi
 PLAYLISTSFOLDERPATH=`cat $PATHDATA/../settings/Playlists_Folders_Path`
 
 ##############################################
-# Second swipe
-# What happens when the same card is swiped a second time?
-# RESTART => start the playlist again vs. PAUSE => toggle pause and play current
-# 1. create a default if file does not exist
-if [ ! -f $PATHDATA/../settings/Second_Swipe ]; then
-    echo "RESTART" > $PATHDATA/../settings/Second_Swipe
-    chmod 777 $PATHDATA/../settings/Second_Swipe
-fi
-# 2. then|or read value from file
-SECONDSWIPE=`cat $PATHDATA/../settings/Second_Swipe`
-
 # Read configuration file
 . $PATHDATA/../settings/rfid_trigger_play.conf
 
@@ -336,31 +325,20 @@ if [ ! -z "$FOLDER" -a ! -z ${FOLDER+x} -a -d "${AUDIOFOLDERSPATH}/${FOLDER}" ];
         # - check the length of the playlist, if =0 then it was cleared before, a state, which should only
         #   be possible after a reboot ($PLLENGTH -gt 0)
         PLLENGTH=$(echo -e "status\nclose" | nc -w 1 localhost 6600 | grep -o -P '(?<=playlistlength: ).*')
-        if [ "$SECONDSWIPE" == "PAUSE" -a $PLLENGTH -gt 0 ]
+        if [ $PLLENGTH -gt 0 ]
         then
-            # The following involves NOT playing the playlist, so we set: 
+            # The following involves NOT playing the playlist, so we set:
             PLAYPLAYLIST=no
-        
+
             STATE=$(echo -e "status\nclose" | nc -w 1 localhost 6600 | grep -o -P '(?<=state: ).*')
             if [ $STATE == "play" ]
             then
-                if [ "$DEBUG" == "true" ]; then echo "MPD playing, pausing the player" >> $PATHDATA/../logs/debug.log; fi
-                sudo $PATHDATA/playout_controls.sh -c=playerpause &>/dev/null
+                if [ "$DEBUG" == "true" ]; then echo "MPD playing, doing nothing" >> $PATHDATA/../logs/debug.log; fi
             else
                 if [ "$DEBUG" == "true" ]; then echo "MPD not playing, start playing" >> $PATHDATA/../logs/debug.log; fi
                 sudo $PATHDATA/playout_controls.sh -c=playerplay &>/dev/null
             fi
-            if [ "$DEBUG" == "true" ]; then echo "Completed: toggle pause/play" >> $PATHDATA/../logs/debug.log; fi
-        elif [ "$SECONDSWIPE" == "NOAUDIOPLAY" ]
-        then
-            # The following involves NOT playing the playlist, so we set: 
-            PLAYPLAYLIST=no
-
-            # "$SECONDSWIPE" == "NOAUDIOPLAY"
-            # "$LASTPLAYLIST" == "$PLAYLISTNAME" => same playlist triggered again 
-            # => do nothing
-            # echo "do nothing" > /dev/null 2>&1
-            if [ "$DEBUG" == "true" ]; then echo "Completed: do nothing" >> $PATHDATA/../logs/debug.log; fi
+            if [ "$DEBUG" == "true" ]; then echo "Completed: continue" >> $PATHDATA/../logs/debug.log; fi
         fi
     fi
     # now we check if we are still on for playing what we got passed on:
