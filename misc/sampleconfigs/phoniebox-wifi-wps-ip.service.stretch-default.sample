@@ -1,0 +1,13 @@
+[Unit]  
+Description=Phoniebox WiFi-WPS-IP Service
+After=network.target iptables.service firewalld.service
+
+[Service]
+User=pi
+Group=pi
+Restart=always
+WorkingDirectory=/home/pi/RPi-Jukebox-RFID
+ExecStart=/usr/bin/python3 /home/pi/RPi-Jukebox-RFID/scripts/wifi-wps-ip.py
+
+[Install]
+WantedBy=multi-user.target
