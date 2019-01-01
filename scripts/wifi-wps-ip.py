@@ -118,3 +118,6 @@ if pi.get_mode(13) != pigpio.INPUT:
   pi.set_glitch_filter(13, 300)
 
 pi.callback(13, pigpio.EITHER_EDGE, check_wifi_wps)
+
+while True:
+  signal.pause()
