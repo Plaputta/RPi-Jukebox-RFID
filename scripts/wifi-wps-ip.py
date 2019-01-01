@@ -65,8 +65,10 @@ def display_info(pixels, msg, color):
   pixels.show()
   sleep(3)
 
-def check_wifi_wps():
+def check_wifi_wps(gpio, level, tick):
   global spinner_running
+  print("WiFi config triggered.")
+
   try:
     rgb_service_status = check_call("service phoniebox-rgb-leds status",shell=True, stdout=DEVNULL)
   except:
@@ -112,12 +114,11 @@ spinner_running = False
 
 pi = pigpio.pi()
 
-if pi.get_mode(13) != pigpio.INPUT:
-  pi.set_mode(13, pigpio.INPUT)
-  pi.set_pull_up_down(13, pigpio.PUD_UP)
-  pi.set_glitch_filter(13, 300)
+pi.set_mode(13, pigpio.INPUT)
+pi.set_pull_up_down(13, pigpio.PUD_UP)
+pi.set_glitch_filter(13, 300)
 
-pi.callback(13, pigpio.EITHER_EDGE, check_wifi_wps)
+pi.callback(13, pigpio.FALLING_EDGE, check_wifi_wps)
 
 while True:
   signal.pause()
